@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sudarshan — Predict Early. Fly Safely.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ======================================================== -->
+  <!-- 1. CINEMATIC WELCOME / INTRO OVERLAY (Matches exact video) -->
+  <!-- DO NOT MODIFY: Welcome page is final                     -->
+  <!-- ======================================================== -->
+  <section id="welcome-screen" class="welcome-screen">
+    <!-- Background Video matching user file -->
+    <div class="video-container">
+      <video id="intro-video" playsinline preload="auto" muted autoplay>
+        <source src="gemini_generated_video_821cea9e.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+      </video>
+    </div>
+
+    <!-- Bottom "Tap to Start" button (Styled with Indian Flag Colors) -->
+    <div class="tap-to-start-container bottom-docked" id="tap-to-start-container">
+      <button id="btn-tap-to-start" class="btn-tap-to-start flag-themed">
+        <div class="flag-stripe-bar">
+          <span class="stripe saffron"></span>
+          <span class="stripe white"></span>
+          <span class="stripe green"></span>
+        </div>
+        <div class="tap-inner-content">
+          <span class="tap-jet">✈</span>
+          <span class="tap-text">TAP TO START</span>
+          <span class="tap-sub">ENTER MISSION CONTROL</span>
+        </div>
+        <div class="flag-glow-border"></div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 2. SUDARSANA CHAKRA COMMAND CENTER (APP SHELL)           -->
+  <!-- ======================================================== -->
+  <div id="app-container" class="app-container hidden">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <div class="chakra-mark">
+          <div class="chakra-rotating-disc"></div>
+          <span class="chakra-glyph">☸</span>
+        </div>
+        <div class="breadcrumb-container" id="breadcrumb-bar">
+          <span class="crumb">Fleet Command</span>
+        </div>
+        <div class="demo-badge" title="Synthetic Defence Dataset">
+          DEMO DATA &ndash; NOT REAL OPERATIONAL DATA
+        </div>
+      </div>
+
+      <div class="top-bar-center">
+        <div class="global-search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search-input" placeholder="Search aircraft (AC-107), components, faults..." autocomplete="off">
+        </div>
+      </div>
+
+      <div class="top-bar-right">
+        <!-- Guided Demo Button -->
+        <button id="btn-guided-demo" class="btn btn-guided-demo">
+          <span class="sparkle">✨</span>
+          <span>Guided Demo (AC-107)</span>
+        </button>
+
+        <!-- Live Clock & Edge Sync -->
+        <div class="telemetry-clock">
+          <div class="clock-time" id="topbar-clock">00:00:00 UTC</div>
+          <div class="sync-status online" id="topbar-sync" title="Edge Sync with Base Repair Depots">
+            <span class="sync-dot"></span> Edge Sync: Live (3ms)
+          </div>
+        </div>
+
+        <!-- Alert Bell -->
+        <div class="alert-bell-wrapper">
+          <button id="btn-alert-bell" class="btn-icon bell-btn" title="System Alerts">
+            <span>🔔</span>
+            <span class="badge-alert-count" id="bell-alert-count">4</span>
+          </button>
+        </div>
+
+        <!-- Active Role Badge & Switcher -->
+        <div class="role-chip" id="topbar-role-chip">
+          <span class="role-icon" id="topbar-role-icon">🎖️</span>
+          <div class="role-meta">
+            <span class="role-label">ACTIVE ROLE</span>
+            <strong class="role-title" id="topbar-role-name">Command/Admin</strong>
+          </div>
+          <button id="btn-change-role" class="btn-link" title="Switch User Role">Switch</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sub-header Notice Strip -->
+    <div class="decision-support-strip">
+      <span class="strip-icon">ℹ️</span>
+      <span>Decision Support Only &bull; <strong>Final maintenance decision rests with authorized personnel.</strong></span>
+      <span class="strip-right-metric">Edge Node: <strong>AFS Thanjavur (Forward Base Node 1)</strong></span>
+    </div>
+
+    <!-- Main Workspace (Sidebar Rail + Content Area) -->
+    <div class="workspace-layout">
+      <!-- Slim Icon Rail Sidebar (Expands on Hover) -->
+      <aside class="sidebar-rail" id="sidebar-rail">
+        <div class="rail-header">
+          <div class="rail-brand">
+            <span class="rail-logo">✈</span>
+            <span class="rail-brand-name">SUDARSANA</span>
+          </div>
+        </div>
+
+        <nav class="rail-nav" id="rail-nav">
+          <a href="#/app/fleet" class="rail-link active" data-route="fleet" data-roles="all">
+            <span class="rail-icon">🛸</span>
+            <span class="rail-text">Fleet Command</span>
+          </a>
+          <a href="#/app/aircraft/AC-107" class="rail-link" data-route="aircraft" data-roles="all">
+            <span class="rail-icon">✈️</span>
+            <span class="rail-text">Aircraft Twin &amp; Health</span>
+          </a>
+          <a href="#/app/component/AC-107-HYD-PUMP" class="rail-link" data-route="component" data-roles="admin,engineer,technician">
+            <span class="rail-icon">⚙️</span>
+            <span class="rail-text">Component Detail (XAI)</span>
+          </a>
+          <a href="#/app/fault-graph/AC-107-HYD-PUMP" class="rail-link" data-route="fault-graph" data-roles="admin,engineer">
+            <span class="rail-icon">🕸️</span>
+            <span class="rail-text">Fault Dependency Graph</span>
+          </a>
+          <a href="#/app/twin/AC-107" class="rail-link" data-route="twin" data-roles="admin,engineer">
+            <span class="rail-icon">🛡️</span>
+            <span class="rail-text">Digital Health Twin</span>
+          </a>
+          <a href="#/app/simulator" class="rail-link" data-route="simulator" data-roles="admin,engineer">
+            <span class="rail-icon">🔮</span>
+            <span class="rail-text">What-If Simulator</span>
+          </a>
+          <a href="#/app/planning" class="rail-link" data-route="planning" data-roles="admin,engineer,inventory">
+            <span class="rail-icon">📅</span>
+            <span class="rail-text">Maintenance Planning</span>
+          </a>
+          <a href="#/app/spares" class="rail-link" data-route="spares" data-roles="admin,inventory">
+            <span class="rail-icon">📦</span>
+            <span class="rail-text">Spares &amp; Inventory</span>
+          </a>
+          <a href="#/app/learning" class="rail-link" data-route="learning" data-roles="admin,engineer">
+            <span class="rail-icon">🧠</span>
+            <span class="rail-text">Prediction &amp; Learning</span>
+          </a>
+          <a href="#/app/assistant" class="rail-link" data-route="assistant" data-roles="all">
+            <span class="rail-icon">💬</span>
+            <span class="rail-text">Knowledge Assistant</span>
+          </a>
+          <a href="#/app/audit" class="rail-link" data-route="audit" data-roles="admin,auditor">
+            <span class="rail-icon">📋</span>
+            <span class="rail-text">Audit &amp; Data Quality</span>
+          </a>
+        </nav>
+
+        <div class="rail-footer">
+          <div class="rail-role-indicator">
+            <span class="dot-online"></span>
+            <span class="rail-role-text" id="rail-role-label">Admin Mode</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Dynamic Content Stage -->
+      <main class="content-stage" id="content-stage">
+        <!-- Views will be injected dynamically here by router -->
+        <div id="view-mount-point" class="view-mount-point">
+          <!-- Loading skeleton initially -->
+          <div class="loading-skeleton-screen">
+            <div class="skeleton-header"></div>
+            <div class="skeleton-grid">
+              <div class="skeleton-card"></div>
+              <div class="skeleton-card"></div>
+              <div class="skeleton-card"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Alert Drawer (Flyout) -->
+    <div id="alerts-drawer" class="alerts-drawer hidden">
+      <div class="drawer-header">
+        <div class="drawer-title">
+          <span>🔔 Fleet Alerts &bull; 4 Levels</span>
+        </div>
+        <button id="btn-close-drawer" class="btn-icon">&times;</button>
+      </div>
+      <div class="drawer-filters">
+        <button class="filter-pill active" data-filter="ALL">All (5)</button>
+        <button class="filter-pill crit" data-filter="CRITICAL">Critical (1)</button>
+        <button class="filter-pill high" data-filter="HIGH_RISK">High Risk (1)</button>
+        <button class="filter-pill warn" data-filter="WARNING">Warning (2)</button>
+        <button class="filter-pill info" data-filter="INFORMATION">Info (1)</button>
+      </div>
+      <div class="drawer-body" id="drawer-alerts-list">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Guided Demo Spotlight Overlay -->
+    <div id="guided-demo-overlay" class="guided-demo-overlay hidden">
+      <div class="demo-spotlight-card" id="demo-spotlight-card">
+        <div class="demo-card-header">
+          <span class="demo-step-tag" id="demo-step-number">Step 1 of 10</span>
+          <button id="btn-close-demo" class="btn-close-demo">&times;</button>
+        </div>
+        <h4 id="demo-step-title">AC-107 End-to-End Walkthrough</h4>
+        <p id="demo-step-desc">Loading guided tour step...</p>
+        <div class="demo-card-actions">
+          <button id="btn-demo-prev" class="btn btn-secondary btn-xs">&larr; Back</button>
+          <button id="btn-demo-next" class="btn btn-primary btn-xs">Next Step &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D Graphics Engine & Datasets (DRISHTI 3D) -->
+  <script src="three.min.js"></script>
+  <script src="OrbitControls.js"></script>
+  <script src="drishti-data.js"></script>
+
+  <!-- Main Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>

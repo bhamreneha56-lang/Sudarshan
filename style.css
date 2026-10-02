@@ -1,0 +1,2500 @@
+/* ========================================================
+   SUDARSHAN — PREDICT EARLY. FLY SAFELY.
+   Ultra-modern Defence Aerospace Dashboard & Cinematic Intro
+   Zero External Dependencies (100% Standalone & Portable)
+   ======================================================== */
+
+/* ========================================================
+   DESIGN SYSTEM TOKENS (Calmer, Functional Dark Mode)
+   ======================================================== */
+:root {
+  /* ========================================================
+     FLAG THEME ACCENTS: Saffron, Pure White, India Green, Ashoka Chakra Blue
+     ======================================================== */
+  --flag-saffron: #ff851b;
+  --flag-saffron-deep: #e65100;
+  --flag-saffron-light: #ffa94d;
+  --flag-saffron-glow: rgba(255, 133, 27, 0.35);
+
+  --flag-white: #ffffff;
+  --flag-white-soft: #f8fafc;
+  --flag-silver: #64748b;
+
+  --flag-green: #10b981;
+  --flag-green-deep: #059669;
+  --flag-green-light: #34d399;
+  --flag-green-glow: rgba(16, 185, 129, 0.35);
+
+  --chakra-navy: #002d62;
+  --chakra-blue: #1d4ed8;
+  --chakra-cyan: #0284c7;
+  --chakra-glow: rgba(2, 132, 199, 0.35);
+
+  /* ========================================================
+     WHITE SURFACE LAYERS (Clean, Modern Luminous Flag Theme)
+     Replaces all black/dark void with crisp white & frosted glass
+     ======================================================== */
+  --bg-void: #ffffff;
+  --bg-deep: #f8fafc;
+  --bg-base: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.94);
+  --bg-card-hover: rgba(255, 255, 255, 1);
+  --bg-card-glass: rgba(255, 255, 255, 0.90);
+  --border-glass: rgba(0, 45, 98, 0.14);
+
+  /* Subtle Flag Hairline Borders */
+  --border-subtle: rgba(0, 45, 98, 0.12);
+  --border-muted: rgba(255, 133, 27, 0.35);
+  --border-cyan: rgba(2, 132, 199, 0.35);
+  --border-saffron: rgba(255, 133, 27, 0.70);
+  --border-green: rgba(16, 185, 129, 0.70);
+  --border-glow: rgba(255, 133, 27, 0.50);
+
+  /* Brand Accents */
+  --brand-cyan: #0284c7;
+  --brand-cyan-glow: rgba(2, 132, 199, 0.35);
+  --brand-saffron: #ff851b;
+  --brand-white: #ffffff;
+  --brand-green: #10b981;
+
+  /* 4 Distinct Alert Levels (Military Tactical Palette) */
+  --alert-info: #0284c7;         /* Navy Sapphire */
+  --alert-info-bg: rgba(2, 132, 199, 0.12);
+  --alert-warning: #d97706;      /* Amber */
+  --alert-warning-bg: rgba(217, 119, 6, 0.12);
+  --alert-high-risk: #ea580c;    /* Deep Orange */
+  --alert-high-risk-bg: rgba(234, 88, 12, 0.14);
+  --alert-critical: #dc2626;     /* Crimson Red */
+  --alert-critical-bg: rgba(220, 38, 38, 0.15);
+
+  /* Typography Colors (Dark High Contrast for White Theme) */
+  --text-primary: #0f172a;       /* Deep Slate Navy */
+  --text-secondary: #334155;     /* Slate */
+  --text-muted: #64748b;         /* Muted Slate */
+  --text-dim: #94a3b8;          /* Light Slate */
+
+  /* Fonts */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'Consolas', 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Layout Constants */
+  --sidebar-collapsed-width: 68px;
+  --sidebar-expanded-width: 250px;
+  --topbar-height: 56px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --transition-fast: 0.18s ease;
+  --transition-smooth: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+  line-height: 1.5;
+  overflow-x: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================================
+   1. CINEMATIC WELCOME INTRO SCREEN (FINAL — DO NOT MODIFY)
+   ======================================================== */
+.welcome-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.welcome-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.video-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Bottom Docked Tap to Start Container */
+.tap-to-start-container.bottom-docked {
+  position: absolute;
+  bottom: 35px;
+  left: 50%;
+  transform: translateX(-50%) translateY(25px) scale(0.95);
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 200;
+}
+
+.tap-to-start-container.bottom-docked.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+/* Flag-Themed Premium Button */
+.btn-tap-to-start.flag-themed {
+  position: relative;
+  background: rgba(7, 14, 25, 0.85);
+  border: 2px solid transparent;
+  background-image: linear-gradient(rgba(7, 14, 25, 0.92), rgba(7, 14, 25, 0.92)), 
+                    linear-gradient(90deg, #ff9933 0%, #ffffff 50%, #138808 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  padding: 0.95rem 2.6rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7),
+              -10px 0 25px rgba(255, 153, 51, 0.4),
+              10px 0 25px rgba(19, 136, 8, 0.4);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.btn-tap-to-start.flag-themed:hover {
+  transform: scale(1.06);
+  box-shadow: 0 12px 45px rgba(0, 0, 0, 0.8),
+              -15px 0 35px rgba(255, 153, 51, 0.65),
+              15px 0 35px rgba(19, 136, 8, 0.65);
+}
+
+/* Tricolor Stripe Accent */
+.flag-stripe-bar {
+  display: flex;
+  width: 70px;
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.15rem;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+.flag-stripe-bar .stripe { flex: 1; height: 100%; }
+.flag-stripe-bar .saffron { background: #ff9933; }
+.flag-stripe-bar .white { background: #ffffff; }
+.flag-stripe-bar .green { background: #138808; }
+
+.tap-inner-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.tap-jet {
+  font-size: 1.4rem;
+  color: #ff9933;
+  filter: drop-shadow(0 0 6px rgba(255, 153, 51, 0.8));
+  animation: pulse-jet 2s infinite ease-in-out;
+}
+
+.tap-text {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.tap-sub {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: #ff9933;
+  font-weight: 600;
+}
+
+.flag-glow-border {
+  position: absolute;
+  inset: -8px;
+  border-radius: 58px;
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+  animation: flag-radar-expand 2.2s infinite ease-out;
+}
+
+@keyframes flag-radar-expand {
+  0% { transform: scale(0.96); opacity: 0.7; }
+  100% { transform: scale(1.18); opacity: 0; }
+}
+
+@keyframes pulse-jet {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* ========================================================
+   2. APP SHELL & TOP BAR
+   ======================================================== */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+/* Faint Flowing Indian Flag Background Image (From User Image 2) on White */
+.app-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('flag_background.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.32; /* Faint, elegant watermark across white canvas */
+  filter: saturate(1.15) brightness(1.02);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Subtle Luminous Ambient Lighting across White Theme */
+.app-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse 95% 65% at 50% 50%, rgba(255, 255, 255, 0.45) 0%, rgba(248, 250, 252, 0.75) 100%);
+  z-index: 2;
+}
+
+.app-container.hidden {
+  display: none;
+  opacity: 0;
+}
+
+/* Top Bar with Elegant Tricolor Ribbon on White */
+.top-bar {
+  height: var(--topbar-height);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 45, 98, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.2rem;
+  flex-shrink: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 45, 98, 0.06);
+  position: relative;
+}
+
+/* Elegant Indian Tricolor Ribbon across top of entire screen */
+.top-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff851b 0%, #ffa94d 33%, #ffffff 33%, #ffffff 66%, #10b981 66%, #059669 100%);
+  box-shadow: 0 0 10px rgba(255, 133, 27, 0.45);
+  z-index: 1001;
+}
+
+/* Hide internal widgets when on Role Selection Screen */
+.top-bar.role-select-mode .top-bar-center,
+.top-bar.role-select-mode .btn-guided-demo,
+.top-bar.role-select-mode .alert-bell-wrapper,
+.top-bar.role-select-mode .role-chip {
+  display: none !important;
+}
+
+.sidebar-rail.hidden-rail {
+  display: none !important;
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.chakra-mark {
+  width: 32px;
+  height: 32px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chakra-rotating-disc {
+  position: absolute;
+  inset: 0;
+  border: 1.5px dashed var(--flag-saffron);
+  border-radius: 50%;
+  animation: spinSlow 16s linear infinite;
+  box-shadow: 0 0 8px rgba(255, 133, 27, 0.25);
+}
+
+.chakra-glyph {
+  font-size: 1.15rem;
+  color: var(--chakra-navy);
+  text-shadow: 0 0 8px rgba(0, 45, 98, 0.2);
+}
+
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.breadcrumb-container .crumb {
+  color: var(--chakra-navy);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.breadcrumb-container .crumb-link {
+  color: var(--flag-saffron-deep);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.breadcrumb-container .crumb-link:hover { text-decoration: underline; color: var(--flag-saffron); }
+.breadcrumb-container .crumb-sep { color: var(--text-dim); }
+
+.demo-badge {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  background: rgba(255, 133, 27, 0.12);
+  border: 1px solid rgba(255, 133, 27, 0.45);
+  color: var(--flag-saffron-deep);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* Top Bar Center Search on White */
+.top-bar-center {
+  flex: 1;
+  max-width: 380px;
+  margin: 0 1.5rem;
+}
+
+.global-search-box {
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid rgba(0, 45, 98, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.8rem;
+  gap: 0.5rem;
+  transition: all var(--transition-fast);
+}
+
+.global-search-box:focus-within {
+  border-color: var(--flag-saffron);
+  box-shadow: 0 0 14px rgba(255, 133, 27, 0.25);
+  background: #ffffff;
+}
+
+.global-search-box .search-icon {
+  font-size: 0.85rem;
+  color: var(--flag-saffron-deep);
+}
+
+.global-search-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #0f172a;
+  font-size: 0.82rem;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+.global-search-box input::placeholder { color: var(--text-muted); }
+
+/* Top Bar Right */
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.btn-guided-demo {
+  background: linear-gradient(135deg, rgba(255, 133, 27, 0.18) 0%, rgba(16, 185, 129, 0.14) 100%);
+  border: 1px solid rgba(255, 133, 27, 0.5);
+  color: #ffffff;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(255, 133, 27, 0.25);
+  transition: all var(--transition-fast);
+}
+
+.btn-guided-demo:hover {
+  background: linear-gradient(135deg, #ff851b 0%, #e65100 100%);
+  border-color: #ff851b;
+  color: #ffffff;
+  box-shadow: 0 0 22px rgba(255, 133, 27, 0.55);
+  transform: translateY(-1px);
+}
+
+.telemetry-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-mono);
+  line-height: 1.15;
+}
+
+.clock-time {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.sync-status {
+  font-size: 0.65rem;
+  color: var(--brand-green);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.sync-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-green);
+  box-shadow: 0 0 6px var(--brand-green);
+}
+
+/* Alert Bell Button */
+.alert-bell-wrapper {
+  position: relative;
+}
+
+.bell-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.4rem 0.55rem;
+  font-size: 0.95rem;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.bell-btn:hover {
+  background: rgba(0, 229, 255, 0.12);
+  border-color: var(--brand-cyan);
+  color: #fff;
+}
+
+.badge-alert-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--alert-critical);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 0.1rem 0.35rem;
+  border-radius: 10px;
+  box-shadow: 0 0 6px var(--alert-critical);
+  animation: pulse-ring 1.8s infinite;
+}
+
+/* Role Chip in Topbar on White */
+.role-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f1f5f9;
+  border: 1px solid rgba(0, 45, 98, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.65rem;
+}
+
+.role-icon { font-size: 1rem; }
+.role-meta { display: flex; flex-direction: column; line-height: 1.1; }
+.role-label { font-size: 0.58rem; color: var(--text-muted); font-family: var(--font-mono); }
+.role-title { font-size: 0.75rem; color: var(--chakra-navy); font-weight: 800; }
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--flag-saffron-deep);
+  font-size: 0.68rem;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 0.3rem;
+  font-weight: 600;
+}
+.btn-link:hover { color: var(--flag-saffron); }
+
+/* Sub-header Decision Support Strip on White */
+.decision-support-strip {
+  height: 26px;
+  background: #f8fafc;
+  border-bottom: 1px solid rgba(0, 45, 98, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.2rem;
+  font-size: 0.68rem;
+  color: #334155;
+  font-family: var(--font-mono);
+}
+
+.decision-support-strip strong { color: var(--chakra-navy); }
+.strip-icon { font-size: 0.72rem; margin-right: 0.3rem; }
+
+/* ========================================================
+   3. WORKSPACE LAYOUT & EXPANDABLE SIDEBAR RAIL
+   ======================================================== */
+.workspace-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+/* Slim Icon Rail Sidebar (Hover to Expand) on White */
+.sidebar-rail {
+  width: var(--sidebar-collapsed-width);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(0, 45, 98, 0.10);
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem 0;
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  z-index: 500;
+  flex-shrink: 0;
+  box-shadow: 4px 0 25px rgba(0, 45, 98, 0.06);
+}
+
+.sidebar-rail:hover {
+  width: var(--sidebar-expanded-width);
+}
+
+.rail-header {
+  padding: 0.4rem 1.2rem 1rem;
+  border-bottom: 1px solid rgba(0, 45, 98, 0.08);
+  margin-bottom: 0.6rem;
+}
+
+.rail-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  white-space: nowrap;
+}
+
+.rail-logo {
+  font-size: 1.35rem;
+  color: var(--flag-saffron);
+  flex-shrink: 0;
+  width: 32px;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(255, 133, 27, 0.3);
+}
+
+.rail-brand-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--chakra-navy);
+}
+
+.rail-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0 0.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.rail-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius-sm);
+  color: #334155;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+  border-left: 3px solid transparent;
+}
+
+.rail-link .rail-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.rail-link:hover {
+  background: rgba(255, 133, 27, 0.08);
+  color: var(--flag-saffron-deep);
+}
+
+.rail-link.active {
+  background: rgba(255, 133, 27, 0.12);
+  color: var(--flag-saffron-deep);
+  border-left-color: var(--flag-saffron);
+  box-shadow: inset 0 0 15px rgba(255, 133, 27, 0.08);
+  font-weight: 800;
+}
+
+.rail-link.disabled-by-rbac {
+  opacity: 0.35;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+.rail-footer {
+  padding: 0.8rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+.rail-role-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.dot-online {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-cyan);
+  flex-shrink: 0;
+}
+
+/* Content Stage Area allowing the faint flowing tricolor silk background to radiate through */
+.content-stage {
+  flex: 1;
+  overflow-y: auto;
+  background: transparent;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.view-mount-point {
+  max-width: 1440px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 12;
+}
+
+/* ========================================================
+   4. CHAKRA HEALTH RINGS & HUD CARDS
+   ======================================================== */
+/* HUD Bracket Card with Saffron & India Green Corner Accents on White */
+.hud-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.35rem;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0, 45, 98, 0.08);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.hud-card:hover {
+  border-color: rgba(255, 133, 27, 0.55);
+  background: var(--bg-card-hover);
+  box-shadow: 0 12px 35px rgba(0, 45, 98, 0.12), 0 0 20px rgba(255, 133, 27, 0.12);
+}
+
+.hud-card::before, .hud-card::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+.hud-card::before {
+  top: -1px; left: -1px;
+  border-top: 3px solid var(--flag-saffron);
+  border-left: 3px solid var(--flag-saffron);
+  border-top-left-radius: 5px;
+}
+.hud-card::after {
+  bottom: -1px; right: -1px;
+  border-bottom: 3px solid var(--flag-green);
+  border-right: 3px solid var(--flag-green);
+  border-bottom-right-radius: 5px;
+}
+
+.card-header-clean {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.5rem;
+}
+
+.card-title-group h3 {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: var(--chakra-navy);
+  letter-spacing: 0.5px;
+}
+.card-title-group p {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* 4 Alert Level Badges */
+.badge-alert {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.badge-alert.critical {
+  background: var(--alert-critical-bg);
+  border: 1px solid var(--alert-critical);
+  color: var(--alert-critical);
+  animation: pulse-ring 1.8s infinite;
+}
+
+.badge-alert.high-risk {
+  background: var(--alert-high-risk-bg);
+  border: 1px solid var(--alert-high-risk);
+  color: var(--alert-high-risk);
+}
+
+.badge-alert.warning {
+  background: var(--alert-warning-bg);
+  border: 1px solid var(--alert-warning);
+  color: var(--alert-warning);
+}
+
+.badge-alert.info {
+  background: var(--alert-info-bg);
+  border: 1px solid var(--alert-info);
+  color: var(--alert-info);
+}
+
+.badge-alert.normal {
+  background: rgba(19, 136, 8, 0.12);
+  border: 1px solid var(--brand-green);
+  color: #059669;
+}
+
+/* Chakra Concentric Health Ring Component */
+.chakra-ring-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto;
+}
+
+.chakra-svg-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.chakra-svg-ring circle {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease;
+}
+
+.chakra-ring-bg {
+  stroke: rgba(0, 45, 98, 0.08);
+}
+
+.chakra-ring-val {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.chakra-ring-val .big-num {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--chakra-navy);
+  line-height: 1;
+}
+
+.chakra-ring-val .ring-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 0.2rem;
+}
+
+/* ========================================================
+   5. VIEW: ROLE SELECTION (/role-select) — WHITE FLAG THEME
+   ======================================================== */
+.role-select-view {
+  max-width: 1100px;
+  margin: 2.2rem auto;
+  animation: fadeIn 0.4s ease;
+}
+
+.role-header-banner {
+  text-align: center;
+  margin-bottom: 2.8rem;
+}
+
+.role-header-banner h2 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, #ff851b 0%, #002d62 50%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+}
+
+.role-header-banner p {
+  color: #334155;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1.6rem;
+}
+
+.role-card {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 45, 98, 0.14);
+  border-radius: var(--radius-md);
+  padding: 1.8rem;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 45, 98, 0.08);
+}
+
+/* Elegant Tricolor Accent line on top of each card */
+.role-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3.5px;
+  background: linear-gradient(90deg, var(--flag-saffron) 0%, var(--flag-white) 50%, var(--flag-green) 100%);
+  opacity: 0.9;
+  transition: all var(--transition-fast);
+}
+
+.role-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--flag-saffron);
+  box-shadow: 0 16px 40px rgba(0, 45, 98, 0.14), 0 0 25px rgba(255, 133, 27, 0.2);
+  background: #ffffff;
+}
+
+.role-card:hover::before {
+  opacity: 1;
+  height: 5px;
+  box-shadow: 0 0 12px rgba(255, 133, 27, 0.6);
+}
+
+.role-card-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.role-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  background: #f1f5f9;
+  border: 1px solid rgba(0, 45, 98, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 4px 15px rgba(0, 45, 98, 0.08);
+}
+
+.role-title-box h3 {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.15rem;
+}
+
+.role-access-pill {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--flag-saffron-deep);
+}
+
+.role-desc {
+  font-size: 0.84rem;
+  color: #334155;
+  margin-bottom: 1.3rem;
+  line-height: 1.55;
+  flex: 1;
+}
+
+.role-permissions-list {
+  list-style: none;
+  font-size: 0.76rem;
+  color: #1e293b;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.role-permissions-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.role-permissions-list li::before {
+  content: "✓";
+  color: var(--flag-green-deep);
+  font-weight: 800;
+  font-size: 0.88rem;
+}
+
+.btn-assume-role {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: linear-gradient(135deg, #ff851b 0%, #e65100 100%);
+  border: none;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 133, 27, 0.35);
+  transition: all var(--transition-fast);
+}
+
+.role-card:hover .btn-assume-role {
+  background: linear-gradient(135deg, #ffa94d 0%, #ff851b 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 22px rgba(255, 133, 27, 0.55);
+}
+
+/* ========================================================
+   6. VIEW: FLEET COMMAND DASHBOARD (/app/fleet)
+   ======================================================== */
+.fleet-view {
+  animation: fadeIn 0.35s ease;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 4px 20px rgba(0, 45, 98, 0.08);
+  overflow: hidden;
+}
+
+.kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, var(--flag-saffron) 0%, var(--flag-white) 50%, var(--flag-green) 100%);
+  opacity: 0.85;
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 133, 27, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 45, 98, 0.12), 0 0 18px rgba(255, 133, 27, 0.15);
+}
+
+.kpi-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.kpi-value-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.kpi-num {
+  font-family: var(--font-mono);
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--chakra-navy);
+}
+
+.kpi-trend {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.kpi-trend.good { color: var(--flag-green); }
+.kpi-trend.bad { color: var(--alert-critical); }
+.kpi-trend.warn { color: var(--alert-warning); }
+
+.kpi-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+/* Fleet Visual Center: Radial Chakra View & Forecast */
+.fleet-visual-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1.2fr;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.radial-radar-box {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f1f5f9 100%);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 45, 98, 0.15);
+  box-shadow: inset 0 0 35px rgba(0, 45, 98, 0.06);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#radial-chakra-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.radar-legend {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 45, 98, 0.12);
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
+.radar-legend-item { display: flex; align-items: center; gap: 0.35rem; }
+.dot-legend { width: 8px; height: 8px; border-radius: 50%; }
+.dot-legend.inner { background: var(--alert-critical); box-shadow: 0 0 6px var(--alert-critical); }
+.dot-legend.mid { background: var(--alert-warning); box-shadow: 0 0 6px var(--alert-warning); }
+.dot-legend.outer { background: var(--brand-green); box-shadow: 0 0 6px var(--brand-green); }
+
+/* Fleet Table & Alert Feed Layout */
+.fleet-data-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.2rem;
+}
+
+.data-table-wrapper {
+  overflow-x: auto;
+}
+
+.cmd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  text-align: left;
+}
+
+.cmd-table th {
+  background: #f1f5f9;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--chakra-navy);
+  padding: 0.75rem 0.9rem;
+  border-bottom: 2px solid var(--flag-saffron);
+  letter-spacing: 0.5px;
+}
+
+.cmd-table td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid rgba(0, 45, 98, 0.08);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+.cmd-table tr {
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cmd-table tr:hover {
+  background: rgba(255, 133, 27, 0.08);
+}
+
+.mono-cell { font-family: var(--font-mono) !important; font-weight: 600; }
+.crit-row { border-left: 3px solid var(--alert-critical); }
+.high-row { border-left: 3px solid var(--alert-high-risk); }
+.warn-row { border-left: 3px solid var(--alert-warning); }
+.info-row { border-left: 3px solid var(--flag-green); }
+
+/* Alerts Feed List */
+.alerts-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.alert-feed-item {
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid var(--border-muted);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.65rem 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.alert-feed-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.alert-feed-item.critical { border-left-color: var(--alert-critical); }
+.alert-feed-item.high-risk { border-left-color: var(--alert-high-risk); }
+.alert-feed-item.warning { border-left-color: var(--alert-warning); }
+.alert-feed-item.info { border-left-color: var(--alert-info); }
+
+.feed-header-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.feed-title { font-size: 0.8rem; font-weight: 700; color: #fff; }
+.feed-time { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); }
+.feed-desc { font-size: 0.72rem; color: var(--text-secondary); line-height: 1.4; }
+
+/* ========================================================
+   7. VIEW: AIRCRAFT DASHBOARD & COMPONENT DETAIL
+   ======================================================== */
+.ac-header-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-cyan);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.ac-meta-left h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--chakra-navy);
+  letter-spacing: 1px;
+}
+
+.ac-meta-left p {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-family: var(--font-mono);
+  margin-top: 0.2rem;
+}
+
+.ac-badges-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rul-box {
+  background: #f8fafc;
+  border: 1px solid rgba(0, 45, 98, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1rem;
+  text-align: right;
+  box-shadow: 0 2px 8px rgba(0, 45, 98, 0.05);
+}
+
+.rul-box .rul-label { font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-mono); font-weight: 700; }
+.rul-box .rul-val { font-size: 1.2rem; font-family: var(--font-mono); font-weight: 800; color: var(--alert-warning); }
+
+/* Component Cards Grid */
+.components-subsystem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.comp-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 45, 98, 0.12);
+  border-radius: var(--radius-md);
+  padding: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 45, 98, 0.06);
+  transition: all var(--transition-fast);
+}
+
+.comp-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--flag-saffron);
+  box-shadow: 0 8px 25px rgba(0, 45, 98, 0.12);
+}
+
+.comp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.6rem;
+}
+
+.comp-name { font-size: 0.9rem; font-weight: 800; color: #0f172a; }
+.comp-cat { font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono); }
+
+.comp-health-bar {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0.6rem 0;
+}
+
+.comp-bar-fill { height: 100%; transition: width 0.5s ease; }
+.comp-bar-fill.normal { background: var(--brand-green); }
+.comp-bar-fill.warning { background: var(--alert-warning); }
+.comp-bar-fill.high-risk { background: var(--alert-high-risk); }
+.comp-bar-fill.critical { background: var(--alert-critical); }
+
+/* Explainable AI (XAI) Waterfall */
+.xai-waterfall-card {
+  margin-top: 1.5rem;
+}
+
+.xai-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.78rem;
+}
+
+.xai-factor-name { width: 260px; color: var(--text-secondary); font-weight: 600; }
+.xai-bar-track { flex: 1; height: 12px; background: #e2e8f0; border-radius: 2px; overflow: hidden; position: relative; }
+.xai-fill-pos { height: 100%; background: var(--alert-high-risk); border-radius: 2px; }
+.xai-fill-neg { height: 100%; background: var(--brand-green); border-radius: 2px; }
+.xai-score { width: 45px; text-align: right; font-family: var(--font-mono); font-weight: 700; color: #0f172a; }
+
+/* ========================================================
+   8. VIEW: FAULT DEPENDENCY GRAPH (Interactive Node Graph)
+   ======================================================== */
+.fault-graph-stage {
+  width: 100%;
+  height: 520px;
+  background: #f8fafc;
+  border: 1px solid rgba(0, 45, 98, 0.15);
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.fault-graph-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.graph-floating-panel {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 280px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(0, 45, 98, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 45, 98, 0.12);
+}
+
+.graph-floating-panel h4 { font-size: 0.85rem; color: var(--chakra-navy); font-weight: 800; margin-bottom: 0.4rem; }
+.graph-floating-panel p { font-size: 0.72rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.75rem; }
+
+/* ========================================================
+   9. VIEW: WHAT-IF SIMULATOR
+   ======================================================== */
+.simulator-options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.sim-option-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 45, 98, 0.12);
+  border-radius: var(--radius-md);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 45, 98, 0.06);
+  transition: all var(--transition-fast);
+}
+
+.sim-option-card.recommended {
+  border-color: var(--brand-green);
+  background: rgba(16, 185, 129, 0.06);
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.18);
+}
+
+.badge-recommended {
+  position: absolute;
+  top: -10px;
+  right: 15px;
+  background: var(--brand-green);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.sim-opt-title { font-size: 1rem; font-weight: 800; color: var(--chakra-navy); margin-bottom: 0.3rem; }
+.sim-opt-timeline { font-family: var(--font-mono); font-size: 0.72rem; color: var(--flag-saffron-deep); font-weight: 700; margin-bottom: 1rem; }
+
+.sim-metrics-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  font-size: 0.78rem;
+}
+
+.sim-metric-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.35rem;
+}
+
+.sim-metric-row .label { color: var(--text-secondary); }
+.sim-metric-row .val { font-family: var(--font-mono); font-weight: 700; color: #0f172a; }
+
+.sim-reasons-text {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+/* Counterfactual Note Callout */
+.counterfactual-callout {
+  background: rgba(2, 132, 199, 0.08);
+  border-left: 3px solid var(--brand-cyan);
+  padding: 1rem 1.2rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin-top: 1rem;
+}
+
+/* ========================================================
+   10. VIEW: KNOWLEDGE ASSISTANT CHAT
+   ======================================================== */
+.assistant-chat-container {
+  height: 600px;
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 45, 98, 0.14);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 45, 98, 0.08);
+}
+
+.assistant-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.chat-bubble.bot {
+  align-self: flex-start;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: rgba(255, 133, 27, 0.15);
+  border: 1px solid var(--flag-saffron);
+  color: #0f172a;
+}
+
+.record-id-cite {
+  background: rgba(255, 133, 27, 0.15);
+  border: 1px solid var(--flag-saffron);
+  color: var(--flag-saffron-deep);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  margin: 0 0.2rem;
+}
+
+.assistant-input-bar {
+  display: flex;
+  padding: 0.8rem 1rem;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  gap: 0.75rem;
+}
+
+.assistant-input-bar input {
+  flex: 1;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 0.5rem 0.9rem;
+  color: #0f172a;
+  font-size: 0.82rem;
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+.assistant-input-bar input:focus { border-color: var(--brand-cyan); background: #ffffff; }
+
+/* Quick Question Pills */
+.quick-questions-row {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  overflow-x: auto;
+}
+
+.quick-q-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.7rem;
+  color: #334155;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.quick-q-btn:hover { background: #f1f5f9; color: var(--chakra-navy); border-color: var(--chakra-navy); }
+
+/* ========================================================
+   11. GUIDED DEMO SPOTLIGHT OVERLAY
+   ======================================================== */
+.guided-demo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  background: rgba(0, 45, 98, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+.guided-demo-overlay.hidden { display: none; }
+
+.demo-spotlight-card {
+  width: 480px;
+  max-width: 90vw;
+  background: #ffffff;
+  border: 2px solid var(--brand-saffron);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: 0 15px 50px rgba(0, 45, 98, 0.25), 0 0 30px rgba(255, 133, 27, 0.25);
+  position: relative;
+}
+
+.demo-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.demo-step-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  background: var(--brand-saffron);
+  color: #ffffff;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+}
+
+.btn-close-demo {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+.btn-close-demo:hover { color: #0f172a; }
+
+.demo-spotlight-card h4 {
+  font-size: 1.15rem;
+  color: var(--chakra-navy);
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.demo-spotlight-card p {
+  font-size: 0.84rem;
+  color: #334155;
+  line-height: 1.5;
+  margin-bottom: 1.4rem;
+}
+
+.demo-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* ========================================================
+   12. ALERTS FLYOUT DRAWER
+   ======================================================== */
+.alerts-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  max-width: 90vw;
+  background: #ffffff;
+  border-left: 1px solid rgba(0, 45, 98, 0.14);
+  z-index: 9900;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 0 40px rgba(0, 45, 98, 0.15);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.alerts-drawer.hidden { display: none; }
+
+.drawer-header {
+  height: var(--topbar-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.2rem;
+  border-bottom: 1px solid rgba(0, 45, 98, 0.1);
+  background: #f8fafc;
+}
+
+.drawer-title { font-size: 0.95rem; font-weight: 800; color: var(--chakra-navy); }
+
+.drawer-filters {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border-bottom: 1px solid rgba(0, 45, 98, 0.1);
+  background: #ffffff;
+  overflow-x: auto;
+}
+
+.filter-pill {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: #334155;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.filter-pill.active { background: var(--flag-saffron); color: #ffffff; font-weight: 800; border-color: var(--flag-saffron); }
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: #ffffff;
+}
+
+/* ========================================================
+   13. BUTTONS, SKELETONS, & ANIMATIONS
+   ======================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--transition-fast);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ff851b 0%, #e65100 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 18px rgba(255, 133, 27, 0.35);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #ffa94d 0%, #ff851b 100%);
+  box-shadow: 0 6px 25px rgba(255, 133, 27, 0.55);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: var(--chakra-navy);
+  border: 1px solid rgba(0, 45, 98, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 45, 98, 0.05);
+  font-weight: 700;
+}
+.btn-secondary:hover {
+  background: #f1f5f9;
+  border-color: var(--chakra-navy);
+  color: var(--chakra-navy);
+}
+
+.btn-xs { padding: 0.25rem 0.6rem; font-size: 0.72rem; }
+.btn-sm { padding: 0.4rem 0.8rem; font-size: 0.78rem; }
+
+/* Skeleton Loading Screen */
+.loading-skeleton-screen {
+  padding: 2rem;
+  animation: pulse-glow 1.5s infinite alternate;
+}
+.skeleton-header { height: 60px; background: rgba(0, 45, 98, 0.06); border-radius: 4px; margin-bottom: 1.5rem; }
+.skeleton-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.skeleton-card { height: 180px; background: rgba(0, 45, 98, 0.04); border-radius: 6px; }
+
+/* Animations */
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.96); opacity: 1; }
+  50% { transform: scale(1.04); opacity: 0.8; }
+  100% { transform: scale(0.96); opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .fleet-visual-grid, .fleet-data-grid, .simulator-options-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========================================================
+   14. DRISHTI 3D — AIRCRAFT HEALTH EXPLORER STYLING
+   ======================================================== */
+.drishti-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+  animation: fadeIn var(--transition-normal);
+}
+
+/* Drishti Top Bar on White */
+.drishti-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-top: 2.5px solid var(--flag-saffron);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1.4rem;
+  box-shadow: 0 4px 20px rgba(0, 45, 98, 0.08);
+  flex-wrap: wrap;
+  gap: 1rem;
+  backdrop-filter: blur(16px);
+}
+
+.drishti-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.drishti-ac-selector {
+  background: #f1f5f9;
+  border: 1px solid var(--flag-saffron);
+  color: var(--chakra-navy);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-fast);
+  box-shadow: 0 0 10px rgba(255, 133, 27, 0.15);
+}
+.drishti-ac-selector:hover, .drishti-ac-selector:focus {
+  border-color: var(--flag-saffron-deep);
+  box-shadow: 0 0 15px rgba(255, 133, 27, 0.35);
+  background: #ffffff;
+}
+
+.drishti-title-group h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--chakra-navy);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.drishti-title-group p {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  margin: 0.2rem 0 0 0;
+}
+
+.drishti-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.drishti-sync-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.drishti-sync-tag strong {
+  color: var(--flag-green-deep);
+}
+
+/* Workspace Grid: 3D Viewport on Left, Drawer on Right */
+.drishti-main-workspace {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 1.2rem;
+  position: relative;
+  min-height: 580px;
+}
+
+.drishti-main-workspace.drawer-collapsed {
+  grid-template-columns: 1fr;
+}
+
+/* 3D Canvas Viewport Box on White */
+.drishti-canvas-box {
+  position: relative;
+  background: radial-gradient(circle at 50% 45%, #ffffff 0%, #f1f5f9 100%);
+  border: 1px solid rgba(0, 45, 98, 0.15);
+  border-top: 1px solid rgba(255, 133, 27, 0.4);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  height: 580px;
+  box-shadow: inset 0 0 50px rgba(0, 45, 98, 0.06), 0 10px 35px rgba(0, 45, 98, 0.08);
+}
+
+#drishti-three-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  outline: none;
+}
+
+/* Canvas HUD Overlays */
+.drishti-hud-corner {
+  position: absolute;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(0, 45, 98, 0.65);
+  letter-spacing: 0.08em;
+  z-index: 10;
+  padding: 0.8rem;
+  font-weight: 700;
+}
+.drishti-hud-tl { top: 0; left: 0; color: var(--flag-saffron-deep); }
+.drishti-hud-tr { top: 0; right: 0; text-align: right; }
+.drishti-hud-bl { bottom: 0; left: 0; }
+.drishti-hud-br { bottom: 0; right: 0; text-align: right; color: var(--flag-green-deep); }
+
+/* 3D Floating Hotspots Container */
+.drishti-hotspots-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.hotspot-chip {
+  position: absolute;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 45, 98, 0.15);
+  border-radius: 20px;
+  padding: 0.25rem 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #0f172a;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 45, 98, 0.12);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.hotspot-chip:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  border-color: var(--flag-saffron);
+  box-shadow: 0 0 16px rgba(255, 133, 27, 0.4);
+  z-index: 25;
+}
+
+.hotspot-chip.high-risk {
+  border-color: var(--alert-high-risk);
+  color: var(--alert-high-risk);
+}
+.hotspot-chip.high-risk .hotspot-beacon {
+  background: var(--alert-high-risk);
+  box-shadow: 0 0 8px var(--alert-high-risk);
+  animation: pulse-ring 1.2s infinite;
+}
+
+.hotspot-chip.critical {
+  border-color: var(--alert-critical);
+  color: var(--alert-critical);
+}
+.hotspot-chip.critical .hotspot-beacon {
+  background: var(--alert-critical);
+  box-shadow: 0 0 10px var(--alert-critical);
+  animation: pulse-ring 0.8s infinite;
+}
+
+.hotspot-chip.normal {
+  border-color: var(--flag-green-deep);
+  color: var(--flag-green-deep);
+}
+.hotspot-chip.normal .hotspot-beacon {
+  background: var(--flag-green-deep);
+}
+
+.hotspot-chip.warning {
+  border-color: var(--alert-warning);
+  color: var(--alert-warning);
+}
+.hotspot-chip.warning .hotspot-beacon {
+  background: var(--alert-warning);
+}
+
+.hotspot-beacon {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Floating Controls Toolbar on 3D Viewport on White */
+.drishti-controls-bar {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 45, 98, 0.15);
+  border-radius: 30px;
+  padding: 0.4rem 0.8rem;
+  z-index: 20;
+  box-shadow: 0 6px 25px rgba(0, 45, 98, 0.12);
+}
+
+.drishti-ctrl-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #334155;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all var(--transition-fast);
+}
+
+.drishti-ctrl-btn:hover {
+  color: var(--chakra-navy);
+  background: #f1f5f9;
+}
+
+.drishti-ctrl-btn.active {
+  color: #ffffff;
+  background: var(--flag-saffron);
+  border-color: var(--flag-saffron);
+  box-shadow: 0 0 10px rgba(255, 133, 27, 0.35);
+}
+
+.drishti-ctrl-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(0, 45, 98, 0.15);
+  margin: 0 0.2rem;
+}
+
+/* Part Selector Dropdown Pill */
+.drishti-part-quick-select {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.drishti-part-quick-select select {
+  background: #ffffff;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 45, 98, 0.15);
+  color: #0f172a;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+}
+
+/* ========================================================
+   PART DETAIL DRAWER (RIGHT PANEL) ON WHITE
+   ======================================================== */
+.part-detail-drawer {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-top: 2.5px solid var(--flag-saffron);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 25px rgba(0, 45, 98, 0.08);
+  height: 580px;
+  overflow: hidden;
+  animation: fadeIn var(--transition-fast);
+}
+
+.part-drawer-header {
+  padding: 1rem 1.2rem;
+  background: #f8fafc;
+  border-bottom: 1px solid rgba(0, 45, 98, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.part-drawer-header h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--chakra-navy);
+  margin: 0;
+}
+
+.part-drawer-header p {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  margin: 0.25rem 0 0 0;
+}
+
+.btn-drawer-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+.btn-drawer-close:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+/* Drawer Tabs */
+.part-drawer-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(0, 45, 98, 0.1);
+  background: #f1f5f9;
+}
+
+.part-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.65rem 0.3rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.part-tab-btn:hover {
+  color: var(--chakra-navy);
+  background: #e2e8f0;
+}
+
+.part-tab-btn.active {
+  color: var(--flag-saffron-deep);
+  border-bottom-color: var(--flag-saffron);
+  background: rgba(255, 133, 27, 0.1);
+}
+
+.part-drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Drawer Tab Panes */
+.drawer-tab-pane {
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+}
+.drawer-tab-pane.active {
+  display: flex;
+}
+
+/* Specification Key-Value Grid */
+.spec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.spec-cell {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem;
+  border-radius: var(--radius-sm);
+}
+
+.spec-cell.full-width {
+  grid-column: span 2;
+}
+
+.spec-key {
+  font-size: 0.64rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+  font-weight: 700;
+}
+
+.spec-val {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Probabilistic Failure Horizon Cards */
+.failure-horizons-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.horizon-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem;
+  text-align: center;
+}
+
+.horizon-box.high-risk {
+  border-color: rgba(234, 88, 12, 0.4);
+  background: rgba(234, 88, 12, 0.06);
+}
+
+.horizon-label {
+  font-size: 0.62rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.horizon-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  margin-top: 0.2rem;
+  color: #0f172a;
+}
+
+/* XAI Waterfall Bars */
+.xai-attribution-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 0.8rem;
+}
+
+.xai-bar-item {
+  margin-bottom: 0.7rem;
+}
+
+.xai-bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  margin-bottom: 0.25rem;
+}
+
+.xai-progress-track {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.xai-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--brand-cyan), var(--alert-high-risk));
+}
+
+/* Live Sensor Cards */
+.sensor-stream-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+}
+
+.sensor-stream-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.sensor-name {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.sensor-val-live {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.sensor-spark-line {
+  height: 36px;
+  width: 100%;
+  margin-top: 0.3rem;
+}
+
+/* ========================================================
+   AIRCRAFT INFO PANEL (BELOW 3D CANVAS) ON WHITE
+   ======================================================== */
+.drishti-aircraft-info {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-top: 2.5px solid var(--flag-green);
+  border-radius: var(--radius-md);
+  padding: 1.2rem;
+  box-shadow: 0 4px 25px rgba(0, 45, 98, 0.08);
+}
+
+.info-tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid rgba(0, 45, 98, 0.1);
+  padding-bottom: 0.8rem;
+  margin-bottom: 1.2rem;
+  overflow-x: auto;
+}
+
+.info-nav-pill {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.info-nav-pill:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.info-nav-pill.active {
+  background: var(--flag-saffron);
+  border-color: var(--flag-saffron);
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 133, 27, 0.35);
+}
+
+.info-tab-content-pane {
+  display: none;
+  animation: fadeIn var(--transition-fast);
+}
+
+.info-tab-content-pane.active {
+  display: block;
+}
+
+.info-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.info-stat-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+
+.info-stat-label {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+}
+
+.info-stat-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--chakra-navy);
+}
+
+.info-stat-sub {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-top: 0.3rem;
+  line-height: 1.4;
+}
+
+/* Mobile Responsiveness for Drishti 3D */
+@media (max-width: 1024px) {
+  .drishti-main-workspace {
+    grid-template-columns: 1fr;
+  }
+  .part-detail-drawer {
+    height: auto;
+    max-height: 500px;
+  }
+  .drishti-canvas-box {
+    height: 440px;
+  }
+}
