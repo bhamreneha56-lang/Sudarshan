@@ -6,6 +6,106 @@
  * Closed-Loop: Monitor → Detect → Predict → Explain → Simulate → Plan → Maintain → Verify → Learn
  */
 
+// --- MOCK API FETCH INTERCEPTOR FOR FRONTEND-ONLY DEPLOYMENT ---
+const originalFetch = window.fetch;
+window.fetch = async function(url, options) {
+  if (typeof url === 'string' && url.startsWith('/api/')) {
+    const apiData = window.SUDARSHAN_API_DATA;
+    let data = null;
+
+    if (url === '/api/fleet') data = apiData.FLEET_DATA;
+    else if (url.startsWith('/api/aircraft/')) {
+      const id = url.replace('/api/aircraft/', '');
+      data = apiData.AIRCRAFT_DETAILS[id] || apiData.AIRCRAFT_DETAILS['AC-107'];
+    }
+    else if (url.startsWith('/api/component/')) {
+      const id = url.replace('/api/component/', '');
+      data = apiData.COMPONENT_DETAILS[id] || apiData.COMPONENT_DETAILS['AC-107-HYD-PUMP'];
+    }
+    else if (url.startsWith('/api/fault-graph/')) {
+      const id = url.replace('/api/fault-graph/', '');
+      data = apiData.FAULT_GRAPHS[id] || apiData.FAULT_GRAPHS['AC-107-HYD-PUMP'];
+    }
+    else if (url.startsWith('/api/twin/')) {
+      const id = url.replace('/api/twin/', '');
+      data = apiData.DIGITAL_TWIN[id] || apiData.DIGITAL_TWIN['AC-107'];
+    }
+    else if (url.startsWith('/api/drishti/')) {
+      const sub = url.replace('/api/drishti/', '');
+      const parts = sub.split('/');
+      const aircraftId = parts[0] || 'AC-107';
+      if (parts[1] === 'parts' && parts[2]) {
+        const partId = parts[2].toLowerCase();
+        const acParts = window.DRISHTI_PARTS_LIBRARY ? (window.DRISHTI_PARTS_LIBRARY[aircraftId] || window.DRISHTI_PARTS_LIBRARY['AC-107'] || []) : [];
+        data = acParts.find(p => p.componentId.toLowerCase() === partId || p.meshKey.toLowerCase() === partId || p.componentId.toLowerCase().includes(partId) || partId.includes(p.meshKey.toLowerCase())) || acParts[0];
+      } else {
+        data = window.getDrishtiAircraftData ? window.getDrishtiAircraftData(aircraftId) : {};
+      }
+    }
+    else if (url === '/api/telemetry/live') {
+      const jitter = (base, amp) => +(base + (Math.random() * 2 - 1) * amp).toFixed(2);
+      data = {
+        timestamp: new Date().toISOString(),
+        'hyd-pump-3b': {
+          pressure: jitter(3055, 35),
+          temp: jitter(88.4, 1.2),
+          vibration: jitter(4.82, 0.25),
+          flowRate: jitter(41.8, 0.9),
+          cavitationIndex: jitter(0.42, 0.04)
+        },
+        'engine-port': {
+          egt: jitter(678, 12),
+          rpm: jitter(98.4, 0.4),
+          vibration: jitter(1.8, 0.1)
+        }
+      };
+    }
+    else if (url === '/api/simulator') data = apiData.SIMULATOR_DATA;
+    else if (url === '/api/planning') data = apiData.PLANNING_DATA;
+    else if (url === '/api/spares') data = apiData.SPARES_DATA;
+    else if (url === '/api/learning') {
+      if (options && options.method === 'POST') {
+        data = JSON.parse(JSON.stringify(apiData.LEARNING_DATA));
+        data.currentMetrics.accuracy = 99.1;
+        data.currentMetrics.rmseDays = 0.88;
+        data.currentMetrics.falsePositiveRate = 1.3;
+        data.lastRetrained = new Date().toISOString();
+        data.message = 'Model weights successfully updated with 48 verified ground-depot maintenance outcomes.';
+      } else {
+        data = apiData.LEARNING_DATA;
+      }
+    }
+    else if (url === '/api/audit') data = apiData.AUDIT_DATA;
+    else if (url === '/api/assistant') {
+      let query = '';
+      if (options && options.body) {
+        try {
+          query = JSON.parse(options.body).query.toLowerCase();
+        } catch(e) {}
+      }
+      let answer = "Based on Sudarshan's maintenance records, all operational units comply with Air Force Technical Directives. Please specify an aircraft tail (e.g. AC-107, AC-103) or subsystem for focused diagnostic logs [Record Database: DB-SUD-2026].";
+      for (const item of apiData.ASSISTANT_KNOWLEDGE_BASE) {
+        if (item.keywords.some(kw => query.includes(kw))) {
+          answer = item.answer;
+          break;
+        }
+      }
+      data = { query, answer, timestamp: new Date().toISOString() };
+    }
+
+    if (data) {
+      return Promise.resolve(new Response(JSON.stringify(data), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }));
+    } else {
+      return Promise.resolve(new Response(JSON.stringify({ error: 'Not Found' }), { status: 404 }));
+    }
+  }
+  return originalFetch(url, options);
+};
+// -------------------------------------------------------------------
+
 document.addEventListener('DOMContentLoaded', () => {
   // ========================================================
   // 1. AUDIO SYNTHESIS ENGINE (Web Audio API)
